@@ -51,11 +51,12 @@ export default function AddPost() {
         }
     };
 
-    const handleChange = (e) => {
-        var files = e.target.files;
-        var filesArr = Array.prototype.slice.call(files);
-        setFiles({ files: [...files, ...filesArr] });
-        console.log(filesArr);
+    const handleChangeFiles = (e) => {
+        var selectedFiles = e.target.files;
+        // var filesArr = Array.prototype.slice.call(files);
+        // setFiles({ files: [...files, ...filesArr] });
+        // console.log(filesArr);
+        setFiles({files: [...selectedFiles]});
         console.log(files);
     }
 
@@ -112,8 +113,7 @@ export default function AddPost() {
                         type="file"
                         multiple
                         className="hidden"
-                        onChange={handleChange}
-                        value={files} 
+                        onChange={handleChangeFiles}
                         />
                         </label>
                     </div>

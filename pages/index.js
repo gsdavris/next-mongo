@@ -23,15 +23,12 @@ export default IndexPage;
 export async function getServerSideProps(ctx) {
   // get the current environment
   let dev = process.env.NODE_ENV !== 'production';
-  let DEV_URL =  process.env.NEXT_PUBLIC_DEV_URL;
-  let PROD_URL =  process.env.NEXT_PUBLIC_PROD_URL;
+  let DEV_URL =  process.env.DEV_URL;
+  let PROD_URL =  process.env.PROD_URL;
 
-  console.log(process.env.NEXT_PUBLIC_DEV_URL);
   
   // request posts from api
-  let response = await fetch(`http://localhost:3000/api/posts`);
-  // extract the data
-  console.log(response);
+  let response = await fetch(`${dev ? DEV_URL : PROD_URL}/api/posts`);
   // extract the data
   let data = await response.json();
 

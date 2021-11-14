@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import {
     TrashIcon,
     MailIcon,
@@ -13,7 +13,7 @@ const PostCard = ({post}) => {
     const router = useRouter();
 
     // Publish post
-    const publishPost = async (postId) => {
+    const publishPost = async (postId, setPublishing) => {
         // change publishing state
         setPublishing(true);
 
@@ -26,16 +26,18 @@ const PostCard = ({post}) => {
 
             // reset the publishing state
             setPublishing(false);
-
             // reload the page
             return router.push(router.asPath);
+
         } catch (error) {
             // Stop publishing state
             return setPublishing(false);
         }
     };
+
+
     // Delete post
-    const deletePost = async (postId) => {
+    const deletePost = async (postId, setDeleting) => {
         //change deleting state
         setDeleting(true);
 
@@ -48,14 +50,23 @@ const PostCard = ({post}) => {
 
             // reset the deleting state
             setDeleting(false);
-
             // reload the page
             return router.push(router.asPath);
+
         } catch (error) {
             // stop deleting state
             return setDeleting(false);
         }
     };
+
+    const handlePublish = () => {
+        publishPost(post._id , setPublishing);
+    }
+
+    const handleDelete = () => {
+        deletePost(post._id , setDeleting);
+    }
+    
 
     return (
         <div key={post.id} href={post.href} className="group m-1">
@@ -67,17 +78,17 @@ const PostCard = ({post}) => {
                 />
             </div>
             <div className="shadow-lg hover:shadow rounded-lg p-1 -mt-20 mr-4 ml-4 bg-white z-10" >
-                <h3 className="mt-4 text-sm text-gray-700">{post.title}</h3>
-                <p className="mt-1 text-lg font-medium text-gray-900">{post.content}</p>
+                <h3 className="mt-4 text-lg font-semibold text-gray-900">{post.title}</h3>
+                <p className="mt-1 text-sm font-base text-gray-700">{post.content}</p>
                 <small>{new Date(post.createdAt).toLocaleDateString()}</small>
                 <div className="flex justify-between">
                     <button 
-                    onClick={() => publishPost(post._id)}
+                    onClick={handlePublish}
                     className="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-2 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
                         <MailIcon className="inline w-6 h-6 mr-1" /> Publish
                     </button>
                     <button 
-                    onClick={() => deletePost(post._id)}
+                    onClick={handleDelete}
                     className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-sm px-2 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-1 ease-linear transition-all duration-150" type="button">
                         <TrashIcon className="inline w-6 h-6 mr-1" /> Delete
                     </button> 
