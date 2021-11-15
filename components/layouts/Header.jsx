@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { Popover } from "@headlessui/react";
 import {
   MenuAlt3Icon,
@@ -8,6 +9,7 @@ import NavMobile from "../navs/NavMobile";
 
 
 const Header = () => {
+  const { data: session } = useSession();
   return (
     <Popover className="absolute w-full bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -34,18 +36,28 @@ const Header = () => {
             <Nav />
           </Popover.Group>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            <a
-              href="#"
-              className="whitespace-nowrap text-lg font-medium  text-white hover:text-gray-200"
+            { !session ? 
+            <>
+            <button  
+              onClick={() => signIn()}
+              className="cursor-pointer whitespace-nowrap text-lg font-medium  text-white hover:text-gray-200"
             >
               Sign in
-            </a>
-            <a
-              href="#"
+            </button>
+            <button 
               className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700"
             >
               Sign up
-            </a>
+            </button>
+            </>
+            :
+            <button
+              onClick={() => signOut()}
+              className="cursor-pointer ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+            >
+              Sign out
+            </button>
+            }
           </div>
         </div>
       </div>

@@ -10,9 +10,12 @@
   "dependencies": {
     "@headlessui/react": "1.4.2",
     "@heroicons/react": "1.0.5",
+    "@next-auth/mongodb-adapter": "^0.0.2-next.285",
     "autoprefixer": "^10.2.4",
     "mongodb": "^4.1.4",
+    "mongoose": "^6.0.12",
     "next": "latest",
+    "next-auth": "^4.0.0-beta.6",
     "postcss": "^8.2.4",
     "react": "17.0.2",
     "react-dom": "17.0.2",

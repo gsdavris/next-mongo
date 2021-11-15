@@ -1,4 +1,4 @@
-const { connectToDatabase } = require('../../lib/mongodb');
+import clientPromise from "../../lib/mongodb";
 const ObjectId = require('mongodb').ObjectId;
 
 export default async function handler(req, res) {
@@ -25,7 +25,8 @@ export default async function handler(req, res) {
 async function getPosts(req,res){
     try {
         // connect to the database
-        let { db } = await connectToDatabase();
+        const client = await clientPromise;
+        let db = client.db(process.env.DB_NAME);
         // fetch the posts
         let posts = await db
             .collection('posts')
@@ -49,7 +50,8 @@ async function getPosts(req,res){
 async function addPost(req, res) {
     try {
         // connect to the database
-        let { db } = await connectToDatabase();
+        const client = await clientPromise;
+        let db = client.db(process.env.DB_NAME);
         // add the post
         await db.collection('posts').insertOne(JSON.parse(req.body));
         // return a message
@@ -69,8 +71,8 @@ async function addPost(req, res) {
 async function updatePost(req, res) {
     try {
         // connect to the database
-        let { db } = await connectToDatabase();
-
+        const client = await clientPromise;
+        let db = client.db(process.env.DB_NAME);
         // update the published status of the post
         await db.collection('posts').updateOne(
             {
@@ -97,7 +99,8 @@ async function updatePost(req, res) {
 async function deletePost(req, res) {
     try {
         // Connecting to the database
-        let { db } = await connectToDatabase();
+        const client = await clientPromise;
+        let db = client.db(process.env.DB_NAME);
 
         // Deleting the post
         await db.collection('posts').deleteOne({
