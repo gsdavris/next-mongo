@@ -26,6 +26,7 @@ export default function AddPost() {
         let post = {
             title,
             content,
+            photos : files,
             published: false,
             createdAt: new Date().toISOString(),
         };
@@ -34,10 +35,10 @@ export default function AddPost() {
             method: 'POST',
             body: JSON.stringify(post),
         });
-
+        console.log(JSON.stringify(post));    
         // get the data
         let data = await response.json();
-
+        
         if (data.success) {
             // reset the fields
             setTitle('');
@@ -51,14 +52,46 @@ export default function AddPost() {
         }
     };
 
-    const handleChangeFiles = (e) => {
-        var selectedFiles = e.target.files;
-        // var filesArr = Array.prototype.slice.call(files);
-        // setFiles({ files: [...files, ...filesArr] });
-        // console.log(filesArr);
-        setFiles({files: [...selectedFiles]});
-        console.log(files);
+    const readFiles = (f) => {
+        let results = []; // array for storing results
+        var filesCount = Number(f.length);
+        var filesLoaded = 0;
+
+        function readFile() {
+            for (var i = 0; i < filesCount ; i++) {
+                if (f[i] && f[0]) {
+                    // Only process image files.
+                    if (!f[i].type.match('image')) {
+                        continue;
+                    }
+
+                    var FR = new FileReader();
+                    FR.onload = function (event) {
+                        results.push(event.target.result); //array where I would like to store results
+                        filesLoaded++;
+                    };
+                    FR.readAsDataURL(f[i]);
+                }
+            }
+        }
+
+        readFile();
+        return results;
+
     }
+    
+    
+    
+    
+    const handleChangeFiles = (e) => {
+        setFiles([]);
+        var selectedFiles = [...e.target.files];
+        setFiles( readFiles(selectedFiles) );
+    }
+
+    
+    
+    console.log('files: ', files);
 
     return (
         <Layout>

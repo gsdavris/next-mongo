@@ -1,5 +1,9 @@
+const multer  = require('multer');
+const {GridFsStorage} = require('multer-gridfs-storage');
 import clientPromise from "../../lib/mongodb";
 const ObjectId = require('mongodb').ObjectId;
+
+export const config = { api: { bodyParser: { sizeLimit: '25mb' } } };
 
 export default async function handler(req, res) {
     // switch the methods
@@ -30,8 +34,9 @@ async function getPosts(req,res){
         // fetch the posts
         let posts = await db
             .collection('posts')
-            .find({})
+            .find()
             .sort({ published: -1 })
+            .project({photos:0})
             .toArray();
         // return the posts
         return res.json({
@@ -52,6 +57,36 @@ async function addPost(req, res) {
         // connect to the database
         const client = await clientPromise;
         let db = client.db(process.env.DB_NAME);
+        const storage = new GridFsStorage({ 
+            db, 
+            client,
+            file: (req, file) => {
+              if (file.mimetype === 'image/jpeg') {
+                return {
+                  bucketName: 'photos'
+                };
+              } else {
+                return null;
+              }
+            }
+        });
+        const upload = multer({ storage });
+        let photos = JSON.parse(req.body).photos;
+
+
+        storage.on('connection', (db) => {
+        // Db is the database instance
+        upload.array('photos', 12).photos;
+        console.log(" we are ready :", photos);
+        });
+        
+        storage.on('connectionFailed', (err) => {
+        // err is the error received from MongoDb
+        console.log(" we are not ready :", err);
+        });
+
+
+
         // add the post
         await db.collection('posts').insertOne(JSON.parse(req.body));
         // return a message

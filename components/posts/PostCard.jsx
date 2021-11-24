@@ -67,12 +67,13 @@ const PostCard = ({post}) => {
         deletePost(post._id , setDeleting);
     }
     
+    console.log(post);
 
     return (
         <div key={post.id} href={post.href} className="group m-1">
-            <div className="shadow w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
+            <div className="cursor-pointer shadow w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
                 <img
-                    src="https://via.placeholder.com/350x250.png?text=Post+Image"
+                    src={"https://via.placeholder.com/350x250.png?text=Post+Image"}
                     alt={post.imageAlt}
                     className="w-full h-full object-center object-cover group-hover:opacity-75"
                 />
